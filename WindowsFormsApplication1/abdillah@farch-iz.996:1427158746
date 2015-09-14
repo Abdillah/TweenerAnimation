@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
+
+namespace TweenerStudio
+{
+    public partial class Displayer : Form
+    {
+        RenderEngine renderer;
+        Polygon poly;
+
+        int[,] points1;
+        int[,] points2;
+
+        public Displayer()
+        {
+            InitializeComponent();
+
+            // Initialize render engine
+            renderer = new RenderEngine(this.canvas);
+
+            // Create polygon
+            points1 = new double[,] { { 50, 50 }, 
+                                   { 100, 50 }, 
+                                   { 100, 100 }, 
+                                   { 50, 100 }, 
+                                   { 200, 200 } };
+
+            points2 = new double[,] { { 250, 550 }, 
+                                   { 300, 250 }, 
+                                   { 300, 300 }, 
+                                   { 250, 300 }, 
+                                   { 400, 400 } };
+
+            poly = new Polygon(points1);
+        }
+
+        private void play_Click(object sender, EventArgs e)
+        {           
+            renderer.render(ref poly);
+            
+            poly.tweening(points2, 100, renderer.render);
+        }
+
+        private void progressbar_Scroll(object sender, EventArgs e)
+        {
+            poly.tweening(points2, (double) (progressbar.Value / progressbar.Maximum), renderer.render);
+        }
+    }
+}
